@@ -4,15 +4,26 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
-    public void PlayGame() {
-        // Or we can use below code; it is working according to the build number
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        SceneManager.LoadScene("level_1");
-    }
 
+    ///Büşra Nur BAHADIR 201511006----------------------------------------------------
+    public void PlayGame() {
+        Hashtable data = SaveSystem.DataLoader();
+        if (data == null)
+            SceneManager.LoadScene("level_1");
+        else
+        {
+            SceneManager.LoadScene("level_" + (data.Count+1).ToString());
+        }
+    }
+    public void LoadPlayer()
+    {
+        SceneManager.LoadScene("loadScene");
+    }
+    //-----------------------------------------------------------------------------------
     public void QuitGame() {
-        // We test if it is really working
-        //Debug.Log("QUIT!...");
         Application.Quit();
     }
+
+  
+    
 }
