@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 
-//Zehra KASAP 201611678,Büşra Nur BAHADIR 201511006
 public class loadScreen : MonoBehaviour
 {
     
@@ -13,7 +12,9 @@ public class loadScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         //disable all buttons 
+        
+       
+        
         for (int i = 0; i < levels.Length; ++i)
             levels[i].interactable = false;
         Hashtable data = SaveSystem.DataLoader();
@@ -22,15 +23,14 @@ public class loadScreen : MonoBehaviour
            
             for (int i = 0; i < data.Count; ++i)
             {
-                levels[i].interactable = true; //enable played level's buttons
-                Score[i].text = "Points:" + data["level_" + (i + 1).ToString()]; //write scores
+                levels[i].interactable = true;
+                Score[i].text = "Points:" + data["level_" + (i + 1).ToString()];
                 
             }
         }
         
 
     }
-    //load selected enabled level
     public void leveltoLoad(int level)
     {
      
@@ -39,10 +39,9 @@ public class loadScreen : MonoBehaviour
     // Update is called once per frame
     public void reset()
     {
-        SaveSystem.Reset(); //delete player data
-        SceneManager.LoadScene("loadScene"); 
+        SaveSystem.Reset();
+        SceneManager.LoadScene("loadScene");
     }
-    //go to Main Menu
     public void Menu()
     {
         SceneManager.LoadScene("menu");

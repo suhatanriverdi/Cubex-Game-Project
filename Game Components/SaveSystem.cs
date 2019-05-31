@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 
-// Büşra Nur BAHADIR 201511006
+// Büşra Nur Bahadır 201511006
 public static class SaveSystem
 {
 

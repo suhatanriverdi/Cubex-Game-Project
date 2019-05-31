@@ -1,18 +1,27 @@
-﻿using System.Collections;
+﻿//Büşra Nur Bahadır 201511006
+//Süha Tanrıverdi 201611689
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-//Büşra Nur BAHADIR 201511006
+
 public class GameController : MonoBehaviour
 {
-   
+    public static GameController instance;
+    // Joystick Off-The-Shelf Library, We need to initialize it then customize
     protected Joystick joystick;
     protected JoyButton joybutton;
-    public bool grounded = true;
+    // Ground Variable to check if Player on the ground
+    bool grounded = true;
 
-    public static GameController instance;
+    // Smoother Acceleration for Player Movement
+    private int speed = 10;
+
+    // Player Game Object for WASD controllers
+    public GameObject player;
     Rigidbody p_Rigidbody;
     private bool isGameOver = false; //boolean for game status
     Vector3 direction;
@@ -31,16 +40,15 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-      
-            if (instance == null)
-            {
-                instance = this;
+        if (instance == null)
+        {
+            instance = this;
 
-            }
-            else if (instance != this)
-            {
-                Debug.Log("the singletance ");
-            }
+        }
+        else if (instance != this)
+        {
+            Debug.Log("the singletance ");
+        }
         scoreText.text = "";
         p_Rigidbody = GetComponent<Rigidbody>();
         joystick = FindObjectOfType<Joystick>();
@@ -54,7 +62,7 @@ public class GameController : MonoBehaviour
     {
         if (gameTime != null)
         {
-            time =120;//2 minute
+            time = 120;//2 minute
             gameTime.text = "Time Left: 2:00:000"; //set initial string to two minutes
             InvokeRepeating("UpdateTimer", 0.0f, 0.01f); //Invokes the method UpdateTimer in time seconds, then repeatedly every repeatRate seconds.
         }
@@ -77,7 +85,7 @@ public class GameController : MonoBehaviour
   
     public void FixedUpdate()
     {
-        direction=new Vector3((joystick.Horizontal * (-4f) + joystick.Vertical * -4f), p_Rigidbody.velocity.y, (joystick.Horizontal * 4f + joystick.Vertical * -4f));
+        direction=new Vector3((joystick.Horizontal * (-6f) + joystick.Vertical * -6f), p_Rigidbody.velocity.y, (joystick.Horizontal * 6f + joystick.Vertical * -6f));
         p_Rigidbody.AddForce(direction *4 * Time.fixedDeltaTime, ForceMode.VelocityChange); 
     }
 
@@ -97,13 +105,40 @@ public class GameController : MonoBehaviour
         //to fix player's y dimention
         if (joybutton.Pressed && grounded)
         {
-            p_Rigidbody.velocity = transform.TransformDirection(p_Rigidbody.velocity.x, p_Rigidbody.velocity.y-2, p_Rigidbody.velocity.z+2);//Jump
+            // We actually locked the movement for player in Y axis but only jump movement allowed here!
+            p_Rigidbody.velocity += new Vector3(0, 2f, 0);//Jump
         }
         //update game score's test
         scoreText.text = "" + gameScore;
+
+        // Player(Cube) Controler, with WASD keys for Desktop Build
+        if (Input.GetKey(KeyCode.W))
+        {   // Move to -X Coordinates
+            //player.transform.position += new Vector3(-0.2f, 0, 0);
+            p_Rigidbody.velocity += new Vector3(-1f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {   // Move to +X Coordinates
+            //player.transform.position += new Vector3(0.2f, 0, 0);
+            p_Rigidbody.velocity += new Vector3(1f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {   // Move to -Z Coordinates
+            //player.transform.position += new Vector3(0, 0, -0.2f);
+            p_Rigidbody.velocity += new Vector3(0, 0, -1f);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {   // Move to +Z Coordinates
+            //player.transform.position += new Vector3(0, 0, 0.2f);
+            p_Rigidbody.velocity += new Vector3(0, 0, 1f);
+        }
+        if (Input.GetKey(KeyCode.Space) && grounded)
+        {   // Move to +Y Coordinates (JUMP)
+            //player.transform.position += new Vector3(0, 0.1f, 0);
+            p_Rigidbody.velocity += new Vector3(0, 2.1f, 0);
+        }
     }
 
-    
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground")) { grounded = true; }
